@@ -1,15 +1,25 @@
+'''
+Author : Shreyak Upadhyay
+Email : shreyakupadhyay07@gmail.com
+Subject : getting data from times of india .
+
+Description:
+Using a request made inside the page of the newspaper times of india to get news related with bangalore
+and using python libraries to extract that data.
+
+'''
+
 import requests
 from bs4 import BeautifulSoup
 import re
 
-#for i in range(1,12):
 all_data = []
 
 #url = 'http://timesofindia.indiatimes.com/articlelist_lazyload/-2128833038.cms?curpg='+str(index)
 def request_page(url):	
 	html = requests.get(url)
 	htmltext = html.text
-	get_data_soup(htmltext)
+	extract_data(htmltext)
 
 def insert_dict(text_by,text_link,text_title,text_date):
 	dictionary = {'by':'','link':'','title':'','date':''}
@@ -20,15 +30,12 @@ def insert_dict(text_by,text_link,text_title,text_date):
 	all_data.append(dictionary)
 
 
-def get_data_soup(htmltext):
+def extract_data(htmltext):
 	soup = BeautifulSoup(htmltext,'lxml')
 	written_by = soup.findAll('span',attrs={'class':'bln'})
 	
 	for tag in written_by: 
 		insert_dict(tag.getText(),tag.previous_sibling.a['href'],tag.previous_sibling.getText(),tag.find('span')['rodate'])
-
-def go_link(text_link):
-	request_page(text_link)
 
 
 for index in range(1,12):
